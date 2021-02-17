@@ -19,7 +19,7 @@ description: |
       $ sudo journalctl -fu snap.ncddns.ncddns
 
 architectures:
-  - build-on: [all]
+  - build-on: [i386, amd64, armhf, arm64]
 
 grade: stable
 confinement: strict
