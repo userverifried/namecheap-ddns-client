@@ -1,0 +1,53 @@
+#!/bin/bash
+
+main() {
+	while true; do
+		# Required paramets: password, domain, and host
+		local readonly password=$(snapctl get password)
+		local readonly domain=$(snapctl get domain)
+		local readonly host=$(snapctl get host)
+
+		# Check IP update method
+		local readonly IP_METHOD=$(snapctl get ip-method)
+
+		# Verify that both are somewhat valid:
+		if [[ -z "${password}" ]]; then
+			echo "Waiting for password to be configured" >&2
+		elif [[ -z "${domain}" ]]; then
+			echo "Waiting for domain to be configured" >&2
+		elif [[ -z "${host}" ]]; then
+			echo "Waiting for host to be configured" >&2
+		else
+			local ip
+			if [[ -z "${IP_METHOD}" ]]; then
+				# Use default akamai method
+				ip=$(curl -s http://whatismyip.akamai.com/)
+			fi
+
+			if [[ -z "${ip}" ]]; then
+				# Something went wrong
+				echo "Could not fetch IP! Waiting for the next round..." >&2
+				continue
+			else
+				# Config looks good, update the record
+				local target="https://dynamicdns.park-your-domain.com/update?host=${host:=@}&domain=${domain}&password=${password}&ip=${ip}"
+				output=$(echo url="${target}" | curl -s -K -)
+
+				local errors
+				if error=$(echo "${output}" | xmllint --xpath '//ErrCount/text()' -); then
+					echo "Successfully updated dynamic DNS to ${ip}"
+				else
+					local errorText=$(echo "${output}" | xmllint --xpath '//ResponseString/text()' -)
+					echo "Errors while updating dynamic DNS (${errorText})" >&2
+				fi
+			fi
+		fi
+
+
+		# Run every 5 minutes
+		sleep 5m
+	done
+}
+
+
+main "$@" || exit 1

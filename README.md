@@ -1,17 +1,18 @@
-# DuckDNS snap
+# Namecheap DDNS Client
 
-[![Snap Status](https://build.snapcraft.io/badge/kyrofa/duckdns.svg)](https://build.snapcraft.io/user/kyrofa/duckdns)
+Small and uncomplicated snap to use Namecheap dynamic DNS services.
+You just need to configure three attributes:
+    $ snap set ncddns password=${PASSWORD}
+    $ snap set ncddns domain=${FQDN}
+    $ snap set ncddns host=${HOST}
 
-This simple snap updates the configured DuckDNS domain names every five
-minutes. Configure it by providing your token:
+You can also do this in one step as shown in the example below:
 
-    $ snap set duckdns-kyrofa token=<secret>
+    $ snap set ncddns domain=example.com host=@ password=mypassword
 
-And configure your domain name list (comma-separated, no spaces):
+If everything is setup correctly, you can see that every five minutes,
+the IP address is updated. In case of any complications, just checkout the logs:
 
-    $ snap set duckdns-kyrofa domains=domain1.com,domain2.com
+    $ sudo journalctl -fu snap.ncddns.ncddns
 
-That's it. The daemon runs every five minutes. Check the journal for output,
-including any problems:
-
-    $ journalctl -u snap.duckdns-kyrofa.duckdns.service
+*Note*: This project initially forked [`duckdns-kyrofa`](https://github.com/kyrofa/duckdns).
