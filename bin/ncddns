@@ -27,7 +27,6 @@ main() {
 			if [[ -z "${ip}" ]]; then
 				# Something went wrong
 				echo "Could not fetch IP! Waiting for the next round..." >&2
-				continue
 			else
 				# Config looks good, update the record
 				local target="https://dynamicdns.park-your-domain.com/update?host=${host:=@}&domain=${domain}&password=${password}&ip=${ip}"
