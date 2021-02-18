@@ -1,3 +1,5 @@
+[![namecheap-ddns-client](https://snapcraft.io/namecheap-ddns-client/badge.svg)](https://snapcraft.io/namecheap-ddns-client)
+
 # Namecheap DDNS Client
 
 Small and uncomplicated snap to use Namecheap dynamic DNS services.
