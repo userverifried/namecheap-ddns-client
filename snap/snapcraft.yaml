@@ -20,6 +20,7 @@ description: |
 
 grade: stable
 confinement: strict
+icon: snap/logo/ncddns.svg
 
 apps:
   ncddns:
