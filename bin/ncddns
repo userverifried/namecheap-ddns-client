@@ -33,10 +33,10 @@ main() {
 				output=$(echo url="${target}" | curl -s -K -)
 
 				local errors
-				if error=$(echo "${output}" | xmllint --xpath '//ErrCount/text()' -); then
+				if error=$(echo "${output}" | sed 's/utf-16/utf-8/' | xmllint --xpath '//ErrCount/text()' -); then
 					echo "Successfully updated dynamic DNS to ${ip}"
 				else
-					local errorText=$(echo "${output}" | xmllint --xpath '//ResponseString/text()' -)
+					local errorText=$(echo "${output}" | sed 's/utf-16/utf-8/' | xmllint --xpath '//ResponseString/text()' -)
 					echo "Errors while updating dynamic DNS (${errorText})" >&2
 				fi
 			fi
