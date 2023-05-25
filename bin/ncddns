@@ -32,11 +32,10 @@ main() {
 				local target="https://dynamicdns.park-your-domain.com/update?host=${host:=@}&domain=${domain}&password=${password}&ip=${ip}"
 				output=$(echo url="${target}" | curl -s -K -)
 
-				local errors
-				if error=$(echo "${output}" | sed 's/utf-16/utf-8/' | xmllint --xpath '//ErrCount/text()' -); then
+				local errorText=$(echo "${output}" | sed 's/utf-16/utf-8/' | xmllint --xpath '//ResponseString/text()' - 2>/dev/null)
+				if [ -z "$errorText" ]; then
 					echo "Successfully updated dynamic DNS to ${ip}"
 				else
-					local errorText=$(echo "${output}" | sed 's/utf-16/utf-8/' | xmllint --xpath '//ResponseString/text()' -)
 					echo "Errors while updating dynamic DNS (${errorText})" >&2
 				fi
 			fi
